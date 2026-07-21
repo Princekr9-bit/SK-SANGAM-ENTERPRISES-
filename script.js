@@ -128,4 +128,54 @@ document.addEventListener('DOMContentLoaded', () => {
       contactForm.reset();
     });
   }
+
+  // scroll progress bar
+  const progressBar = document.querySelector('#scrollProgress');
+  if (progressBar) {
+    const updateProgress = () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    };
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+  }
+
+  // scroll to top button
+  const scrollTopBtn = document.querySelector('#scrollTop');
+  if (scrollTopBtn) {
+    window.addEventListener('scroll', () => {
+      scrollTopBtn.classList.toggle('show', window.scrollY > 500);
+    });
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      item.parentElement.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // gallery lightbox
+  const lightbox = document.querySelector('#lightbox');
+  if (lightbox) {
+    document.querySelectorAll('.gallery-item .shot').forEach(shot => {
+      shot.addEventListener('click', () => {
+        const label = shot.querySelector('.shot-label')?.innerHTML || '';
+        const classes = shot.className;
+        lightbox.querySelector('.lightbox-inner').innerHTML =
+          `<div class="${classes}" style="aspect-ratio:4/3;"><div class="shot-label">${label}</div></div>`;
+        lightbox.classList.add('open');
+      });
+    });
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.closest('.lightbox-close')) {
+        lightbox.classList.remove('open');
+      }
+    });
+  }
 });
